@@ -11,7 +11,25 @@ def mcts_player(sims, alpha):
         return mv
     return play
 
-def dqn_player(path="dqn_final.pt"):
+def dqn_player1(path="dqn_final_50k.pt"):
+    net = Net(); net.load_state_dict(torch.load(path)); net.eval()
+    def play(s: C4):
+        with torch.no_grad():
+            q = net(torch.tensor(encode(s)[None]))
+            legal = s.legal()
+            return int(legal[np.argmax(q[0, legal])])
+    return play
+
+def dqn_player2(path="dqn_final_100k.pt"):
+    net = Net(); net.load_state_dict(torch.load(path)); net.eval()
+    def play(s: C4):
+        with torch.no_grad():
+            q = net(torch.tensor(encode(s)[None]))
+            legal = s.legal()
+            return int(legal[np.argmax(q[0, legal])])
+    return play
+
+def dqn_player3(path="dqn_final_200k.pt"):
     net = Net(); net.load_state_dict(torch.load(path)); net.eval()
     def play(s: C4):
         with torch.no_grad():
@@ -21,7 +39,7 @@ def dqn_player(path="dqn_final.pt"):
     return play
 
 # battle tourney
-def battle(p1, p2, n_games=10):
+def battle(p1, p2, n_games=50):
     w1 = w2 = d = 0
     for g in range(n_games):
         env = C4()
@@ -32,17 +50,29 @@ def battle(p1, p2, n_games=10):
             res = env.winner()
             if res is None:
                 continue
-            if res == 1:   (w1 if first  is p1 else w2) += 1
-            elif res == -1:(w1 if second is p1 else w2) += 1
-            else:          d += 1
+            if res == 1:
+                if first is p1:
+                    w1 += 1
+                else:
+                    w2 += 1
+            elif res == -1:
+                if second is p1:
+                    w1 += 1
+                else:
+                    w2 += 1
+            else:
+                d += 1
             break
     return w1, w2, d
 
 def main():
     agents = {
-        "DQN"         : dqn_player(),
-        "UCT800"      : mcts_player(800, 0.0),
-        "AMAF800a0.3" : mcts_player(800, 0.3),
+        "DQN1"         : dqn_player1(),
+        "DQN2"         : dqn_player2(),
+        "DQN3"         : dqn_player3(),
+        "UCT"      : mcts_player(100000, 0.0),
+        "AMAF80.5" : mcts_player(100000, 0.5),
+        "AMAF81.0" : mcts_player(100000, 1.0),
     }
     names = list(agents)
     for i, a in enumerate(names):
