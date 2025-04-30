@@ -26,7 +26,7 @@ class Net(nn.Module):
 
 # Replay buffer
 class Replay:
-    def __init__(self, cap=200_000):
+    def __init__(self, cap=200000):
         self.buf = collections.deque(maxlen=cap)
     def push(self, *exp): self.buf.append(exp)
     def sample(self, n):  return random.sample(self.buf, n)
@@ -35,7 +35,7 @@ class Replay:
 # agent
 class DQNAgent:
     def __init__(self, lr=1e-3, gamma=.99,
-                 eps_start=1.0, eps_end=.1, eps_decay=5_000):
+                 eps_start=1.0, eps_end=.1, eps_decay=5000):
         self.policy = Net()
         self.target = Net(); self.target.load_state_dict(self.policy.state_dict())
         self.opt = torch.optim.Adam(self.policy.parameters(), lr=lr)

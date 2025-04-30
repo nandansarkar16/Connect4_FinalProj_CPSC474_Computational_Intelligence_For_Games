@@ -13,7 +13,7 @@ def persistent_mcts(sims, alpha):
 
     return play
 
-def dqn_player(path="dqn_final.pt"):
+def dqn_player(path="dqn_final_200k.pt"):
     net = Net(); net.load_state_dict(torch.load(path)); net.eval()
     def play(s: C4):
         with torch.no_grad():
@@ -23,7 +23,7 @@ def dqn_player(path="dqn_final.pt"):
     return play
 
 env = C4()
-p2  = persistent_mcts(20_000, 1.0)   # MCTS with 20k simulations and AMAF alpha=1.0
+p2  = persistent_mcts(80000, 1.0)   # MCTS with 20k simulations and AMAF alpha=1.0
 p1  = dqn_player()                   # DQN as before, 1000 games trained
 
 while env.winner() is None:
