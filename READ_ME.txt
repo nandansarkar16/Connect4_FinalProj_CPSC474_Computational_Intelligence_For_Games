@@ -45,7 +45,7 @@ evaluate.py: Plays a tournament between any mix of players (either different DQN
 
 show_game.py: Plays a single game between any two agents, printing the board after each move so you can inspect their behaviour turn‑by‑turn.
 
-test_script.py: Same script as evaluate.py but a script for testing purposes for grading. To run in a few minutes, instead of many simulations, the MCTS uses only 10k simulations per move (as opposed to the 100k we use in evaluate), and we only play 10 games between agents (instead of 50 in evaluate).
+test_script.py: Same script as evaluate.py but a script for testing purposes for grading. To run in a few minutes, instead of many simulations, the MCTS uses only 1k simulations per move (as opposed to the 100k we use in evaluate), and we only play 10 games between agents (instead of 50 in evaluate).
 
 
 

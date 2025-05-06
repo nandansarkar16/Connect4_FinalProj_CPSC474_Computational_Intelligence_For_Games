@@ -48,7 +48,7 @@ def dqn_player4(path="./weights/dqn_final_500k.pt"):
     return play
 
 # battle tourney
-def battle(p1, p2, n_games=6, name1="Agent1", name2="Agent2"):
+def battle(p1, p2, n_games=10, name1="Agent1", name2="Agent2"):
     w1 = w2 = d = 0
     for g in range(n_games):
         env = C4()
