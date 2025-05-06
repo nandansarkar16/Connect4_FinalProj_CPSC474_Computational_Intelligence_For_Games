@@ -1,2 +1,0 @@
-nohup: ignoring input
-UCT        vs AMAF80.5   : 25-25-0

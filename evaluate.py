@@ -76,12 +76,12 @@ def battle(p1, p2, n_games=50):
 
 def main():
     agents = {
-        "DQN_50k"         : dqn_player1(),
-        "DQN_100k"         : dqn_player2(),
-        "DQN_200k"         : dqn_player3(),
-        "DQN_500k"         : dqn_player4(),
+        # "DQN_50k"         : dqn_player1(),
+        # "DQN_100k"         : dqn_player2(),
+        # "DQN_200k"         : dqn_player3(),
+        # "DQN_500k"         : dqn_player4(),
         "UCT"      : mcts_player(100000, 0.0),
-        "AMAF0.5" : mcts_player(100000, 0.5),
+        # "AMAF0.5" : mcts_player(100000, 0.5),
         "AMAF1.0" : mcts_player(100000, 1.0),
     }
     names = list(agents)

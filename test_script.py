@@ -48,7 +48,7 @@ def dqn_player4(path="./weights/dqn_final_500k.pt"):
     return play
 
 # battle tourney
-def battle(p1, p2, n_games=10, name1="Agent1", name2="Agent2"):
+def battle(p1, p2, n_games=6, name1="Agent1", name2="Agent2"):
     w1 = w2 = d = 0
     for g in range(n_games):
         env = C4()
@@ -83,13 +83,15 @@ def battle(p1, p2, n_games=10, name1="Agent1", name2="Agent2"):
 
 def main():
     agents = {
+        "AMAF1.0"   : mcts_player(1000, 1.0),
+        "AMAF0.75"  : mcts_player(1000, 0.75),
+        "AMAF0.5"   : mcts_player(1000, 0.5),
+        "AMAF0.25"  : mcts_player(1000, 0.25),
+        "UCT"       : mcts_player(1000, 0.0),
         "DQN_50k"   : dqn_player1(),
         "DQN_100k"  : dqn_player2(),
         "DQN_200k"  : dqn_player3(),
         "DQN_500k"  : dqn_player4(),
-        "UCT"       : mcts_player(10000, 0.0),
-        "AMAF0.5"   : mcts_player(10000, 0.5),
-        "AMAF1.0"   : mcts_player(10000, 1.0),
     }
     names = list(agents)
     for i, a in enumerate(names):
