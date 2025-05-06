@@ -11,7 +11,7 @@ def mcts_player(sims, alpha):
         return mv
     return play
 
-def dqn_player1(path="dqn_final_50k.pt"):
+def dqn_player1(path="./weights/dqn_final_50k.pt"):
     net = Net(); net.load_state_dict(torch.load(path)); net.eval()
     def play(s: C4):
         with torch.no_grad():
@@ -20,7 +20,7 @@ def dqn_player1(path="dqn_final_50k.pt"):
             return int(legal[np.argmax(q[0, legal])])
     return play
 
-def dqn_player2(path="dqn_final_100k.pt"):
+def dqn_player2(path="./weights/dqn_final_100k.pt"):
     net = Net(); net.load_state_dict(torch.load(path)); net.eval()
     def play(s: C4):
         with torch.no_grad():
@@ -29,7 +29,16 @@ def dqn_player2(path="dqn_final_100k.pt"):
             return int(legal[np.argmax(q[0, legal])])
     return play
 
-def dqn_player3(path="dqn_final_200k.pt"):
+def dqn_player3(path="./weights/dqn_final_200k.pt"):
+    net = Net(); net.load_state_dict(torch.load(path)); net.eval()
+    def play(s: C4):
+        with torch.no_grad():
+            q = net(torch.tensor(encode(s)[None]))
+            legal = s.legal()
+            return int(legal[np.argmax(q[0, legal])])
+    return play
+
+def dqn_player4(path="./weights/dqn_final_500k.pt"):
     net = Net(); net.load_state_dict(torch.load(path)); net.eval()
     def play(s: C4):
         with torch.no_grad():
@@ -67,18 +76,19 @@ def battle(p1, p2, n_games=50):
 
 def main():
     agents = {
-        "DQN1"         : dqn_player1(),
-        "DQN2"         : dqn_player2(),
-        "DQN3"         : dqn_player3(),
+        "DQN_50k"         : dqn_player1(),
+        "DQN_100k"         : dqn_player2(),
+        "DQN_200k"         : dqn_player3(),
+        "DQN_500k"         : dqn_player4(),
         "UCT"      : mcts_player(100000, 0.0),
-        "AMAF80.5" : mcts_player(100000, 0.5),
-        "AMAF81.0" : mcts_player(100000, 1.0),
+        "AMAF0.5" : mcts_player(100000, 0.5),
+        "AMAF1.0" : mcts_player(100000, 1.0),
     }
     names = list(agents)
     for i, a in enumerate(names):
         for b in names[i+1:]:
             w1, w2, d = battle(agents[a], agents[b])
-            print(f"{a:10s} vs {b:10s} : {w1}-{w2}-{d}")
+            print(f"{a:10s} vs {b:10s} : {w1}-{w2}-{d}", flush=True)
 
 if __name__ == "__main__":
     main()

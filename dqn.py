@@ -1,7 +1,6 @@
 import math, random, collections, numpy as np, torch, torch.nn as nn, torch.nn.functional as F
 from connect4 import C4, ROWS, COLS
 
-# -------- state → tensor --------
 def encode(state: C4) -> np.ndarray:
     p = np.zeros((3, ROWS, COLS), np.float32)
     p[0][state.board ==  state.turn]  = 1.0
@@ -34,10 +33,11 @@ class Replay:
 
 # agent
 class DQNAgent:
-    def __init__(self, lr=1e-3, gamma=.99,
-                 eps_start=1.0, eps_end=.1, eps_decay=5000):
+    def __init__(self, lr=5e-4, gamma=0.95,
+                 eps_start=1.0, eps_end=0.05, eps_decay=5000):
         self.policy = Net()
-        self.target = Net(); self.target.load_state_dict(self.policy.state_dict())
+        self.target = Net()
+        self.target.load_state_dict(self.policy.state_dict())
         self.opt = torch.optim.Adam(self.policy.parameters(), lr=lr)
         self.gamma, self.replay = gamma, Replay()
         self.steps = 0
@@ -56,7 +56,6 @@ class DQNAgent:
             legal = s.legal()
             return int(legal[torch.argmax(q[0, legal])])
 
-    # storage
     def remember(self, s, a, r, s2, done):
         self.replay.push(encode(s), a, r, encode(s2), done)
 
@@ -76,6 +75,8 @@ class DQNAgent:
             tgt = R + self.gamma * q_max * (1 - D)
         loss = F.mse_loss(q_sa, tgt)
 
-        self.opt.zero_grad(); loss.backward(); self.opt.step()
-        if self.steps % 500 == 0:
+        self.opt.zero_grad()
+        loss.backward()
+        self.opt.step()
+        if self.steps % 100 == 0:
             self.target.load_state_dict(self.policy.state_dict())

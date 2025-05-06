@@ -9,7 +9,8 @@ def self_play_episode(agent: DQNAgent):
     env = C4()
     while True:
         a = agent.act(env)
-        env_next = env.copy(); env_next.play(a)
+        env_next = env.copy()
+        env_next.play(a)
         w = env_next.winner()
         r = 0.0 if w is None else (1.0 if w == env.turn else -1.0)
         agent.remember(env, a, r, env_next, w is not None)

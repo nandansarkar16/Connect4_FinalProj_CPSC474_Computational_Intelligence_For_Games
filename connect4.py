@@ -4,7 +4,7 @@ ROWS, COLS = 6, 7
 ALL_MOVES = list(range(COLS))
 
 class C4:
-    """Immutable Connect-4 board.  turn = 1 (X) or −1 (O)."""
+    # Immutable Connect-4 board - immutable  turn = 1 (X) or −1 (O)
     __slots__ = ("board", "turn")
 
     def __init__(self, board: np.ndarray | None = None, turn: int = 1):

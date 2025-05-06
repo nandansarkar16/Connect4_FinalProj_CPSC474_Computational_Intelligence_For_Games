@@ -6,15 +6,10 @@ def key(state: C4) -> bytes:
     return state.board.tobytes() + bytes([1 if state.turn == 1 else 0])
 
 class MCTS:
-    """
-    One object per game.  After every chosen move call
-        mcts.advance(chosen_move)
-    to shift the root to the corresponding child.
-    """
     def __init__(self, sims=800, c=1.4, amaf_alpha=0.0):
         self.sims, self.c, self.alpha = sims, c, amaf_alpha
 
-        # Global statistics tables  (persist across plies)
+        # Global statistics
         self.Ns  = collections.defaultdict(int)
         self.Nsa = collections.defaultdict(int)
         self.Wsa = collections.defaultdict(float)
@@ -25,31 +20,25 @@ class MCTS:
         self.root_key = None     # key of current root node
 
     def choose_move(self, root: C4):
-        """
-        Run self.sims simulations from `root`, return best action.
-        Keeps all tree statistics for future moves.
-        """
-        self.root_key = key(root)                 # remember where root lives
+        # Run self.sims simulations from `root`, return best action.Keeps all tree statistics for future moves.
+        self.root_key = key(root)              
         for _ in range(self.sims):
             self._simulate(root.copy())
 
-        # pick action with highest visit-count
         counts = [self.Nsa[self.root_key, a] for a in ALL_MOVES]
         best = int(np.argmax(counts))
         return best
 
     def advance(self, played_move: int):
-        """
-        Shift the root to the child reached by `played_move`.
-        Keeps all accumulated statistics.
-        """
+        # Shift the root to the child reached by `played_move`.
+        #Keeps all accumulated statistics.
         if self.root_key is None:
             return                                      # first call not yet made
 
         # Reconstruct board corresponding to old root
         child_board = C4()
         child_board.board = (
-            np.frombuffer(self.root_key[:-1], np.int8)  # read-only view
+            np.frombuffer(self.root_key[:-1], np.int8) 
             .copy()                                     # make it writable
             .reshape(6, 7)
         )
