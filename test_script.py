@@ -84,9 +84,7 @@ def battle(p1, p2, n_games=6, name1="Agent1", name2="Agent2"):
 def main():
     agents = {
         "AMAF1.0"   : mcts_player(1000, 1.0),
-        "AMAF0.75"  : mcts_player(1000, 0.75),
         "AMAF0.5"   : mcts_player(1000, 0.5),
-        "AMAF0.25"  : mcts_player(1000, 0.25),
         "UCT"       : mcts_player(1000, 0.0),
         "DQN_50k"   : dqn_player1(),
         "DQN_100k"  : dqn_player2(),
